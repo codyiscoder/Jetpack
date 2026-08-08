@@ -1,4 +1,4 @@
-# Jetpack Mod
+# Jetpack
 
 A simple jetpack mod for Gorilla Tag that lets you boost yourself upward using your controllers. The mod works by applying force based on your head direction, allowing you to move around more freely and add a bit of extra movement to your gameplay.
 
