@@ -1,10 +1,9 @@
-﻿namespace Jetpack
+﻿namespace Jetpack;
+
+internal class Constants
 {
-    internal class Constants
-    {
-        public const string
-            GUID = "net.developercody.jetpack",
-            name = "Jetpack",
-            version = "1.0.0";
-    }
+    public const string
+        GUID = "net.developercody.jetpack",
+        name = "Jetpack",
+        version = "1.0.0";
 }
