@@ -1,10 +1,11 @@
 ﻿using BepInEx;
 using GorillaLocomotion;
 using UnityEngine;
+using static Jetpack.Constants;
 
 namespace Jetpack;
 
-[BepInPlugin(Constants.GUID, Constants.name, Constants.version)]
+[BepInPlugin(GUID, pluginName, version)]
 public class JetpackPlugin : BaseUnityPlugin
 {
     public static JetpackPlugin Instance;
