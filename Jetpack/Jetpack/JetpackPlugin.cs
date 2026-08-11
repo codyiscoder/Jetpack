@@ -1,6 +1,5 @@
 ﻿using BepInEx;
 using GorillaLocomotion;
-using System;
 using UnityEngine;
 
 namespace Jetpack;
@@ -15,7 +14,8 @@ public class JetpackPlugin : BaseUnityPlugin
         init,
         playing,
         last,
-        modEnabled = true;
+        modEnabled = true,
+        wasInModdedRoom;
 
 
     private Transform head;
@@ -55,16 +55,27 @@ public class JetpackPlugin : BaseUnityPlugin
         if (!modEnabled || !init)
             return;
 
+        bool inModdedRoom =
+            NetworkSystem.Instance.InRoom &&
+            NetworkSystem.Instance.GameModeString.Contains("MODDED");
+
+        // according to skellon this is a better way of doing modded checks, im not sure whether its true or not, but we'll use it anyways
+        // update it did NOT work, you could just use it in any lobby, AND it spammed logs with errors.
+        //if (NetworkSystem.Instance is { InRoom: false } net && !net.GameModeString.Contains("MODDED"))
+        if (!inModdedRoom)
+        {
+            if (wasInModdedRoom)
+                CleanUp();
+
+            wasInModdedRoom = false;
+            return;
+        }
+
+        wasInModdedRoom = true;
+
         bool left = ControllerInputPoller.instance.leftControllerIndexFloat > 0.5f;
         bool right = ControllerInputPoller.instance.rightControllerIndexFloat > 0.5f;
         bool on = left || right;
-
-        // according to skellon this is a better way of doing modded checks, im not sure whether its true or not, but we'll use it anyways
-        if (NetworkSystem.Instance is { InRoom: false } net && !net.GameModeString.Contains("MODDED"))
-        {
-            on = false;
-            CleanUp();
-        }
 
         if (on && !last)
             referenceHeadRot = Quaternion.Inverse(head.rotation) * baseROT;
@@ -159,6 +170,7 @@ public class JetpackPlugin : BaseUnityPlugin
         inertiaDelta = Quaternion.identity;
         baseROT = Quaternion.identity;
         last = false;
+        wasInModdedRoom = false;
 
         GTPlayerTransform.ApplyRotationOverride(Quaternion.identity, Time.frameCount);
     }
